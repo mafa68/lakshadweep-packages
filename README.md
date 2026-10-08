@@ -26,3 +26,9 @@ Admins log in with the same form and get an **Admin** page to manage every packa
 - Since there is no approval step, check the Admin page regularly and hide or delete anything inappropriate.
 - Netlify plans and credit limits change; check https://www.netlify.com/pricing before launch.
 - Email confirmation: new accounts must confirm their email (link sent by Netlify) before they can log in. Keep this ON: admin access is decided by email, so confirmation proves the person owns that address. Do not enable autoconfirm.
+
+## New features (v2)
+- Forgot password, package photos (up to 3, resized in the browser), months of operation + month filter, compare (up to 3), share links (`#p=<id>`).
+- Admin page: Verify / Feature buttons, reports from travellers, overview counts, approval switch (turns approval on/off for new packages), JSON backup download.
+- Owners see views and WhatsApp/call/email tap counts on each of their packages.
+- Not built yet: enquiry form, reviews, other languages, map, per-package search pages, analytics. Photos are not included in the JSON backup.
