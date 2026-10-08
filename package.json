@@ -1,0 +1,15 @@
+{
+  "name": "lakshadweep-packages",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/auth.js --bundle --minify --outfile=public/auth.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.0.0",
+    "@netlify/identity": "^1.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
