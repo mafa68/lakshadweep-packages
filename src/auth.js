@@ -1,2 +1,2 @@
-import { login, signup, logout, getUser } from '@netlify/identity';
-window.LVAuth = { login, signup, logout, getUser };
+import { login, signup, logout, getUser, handleAuthCallback } from '@netlify/identity';
+window.LVAuth = { login, signup, logout, getUser, handleAuthCallback };

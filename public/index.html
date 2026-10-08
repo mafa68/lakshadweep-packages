@@ -345,7 +345,8 @@ addEventListener('mousemove',e=>{$('orb').style.transform=`translate(${(e.client
 render();renderMatch();
 $('addDay').onclick=()=>addDay();addDay();
 function route(){const h=location.hash,o=h==='#operators',a=h==='#admin';['top','vMain','vInfo'].forEach(i=>$(i).hidden=o||a);$('vOps').hidden=!o;$('vAdmin').hidden=!a;if(o||a)scrollTo(0,0);if(a)loadAdmin()}
-addEventListener('hashchange',()=>{route();const h=location.hash.slice(1),t=h&&h!=='operators'&&h!=='admin'&&$(h);if(t)setTimeout(()=>t.scrollIntoView(),0)});route();loadLive();loadMe();
+addEventListener('hashchange',()=>{route();const h=location.hash.slice(1),t=h&&h!=='operators'&&h!=='admin'&&$(h);if(t)setTimeout(()=>t.scrollIntoView(),0)});route();loadLive();
+(async()=>{try{if(window.LVAuth&&/(confirmation_token|access_token)=/.test(location.hash)){const c=/confirmation_token=/.test(location.hash);await LVAuth.handleAuthCallback();history.replaceState(null,'',location.pathname+'#operators');route();toast(c?'Email confirmed. You are logged in.':'Signed in.')}}catch(x){toast(x.message||'Confirmation failed. Try logging in.')}await loadMe()})();
 </script>
 </body>
 </html>

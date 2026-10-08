@@ -25,3 +25,4 @@ Admins log in with the same form and get an **Admin** page to manage every packa
 - Deleting an owner account in the Admin page also deletes their packages.
 - Since there is no approval step, check the Admin page regularly and hide or delete anything inappropriate.
 - Netlify plans and credit limits change; check https://www.netlify.com/pricing before launch.
+- Email confirmation: new accounts must confirm their email (link sent by Netlify) before they can log in. Keep this ON: admin access is decided by email, so confirmation proves the person owns that address. Do not enable autoconfirm.
