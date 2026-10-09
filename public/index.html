@@ -368,7 +368,7 @@ $('addForm').addEventListener('submit',async e=>{e.preventDefault();const er=$('
 async function authDo(kind){const er=$('uErr'),em=$('uEmail').value.trim(),pw=$('uPass').value;er.textContent='';
  if(!/^\S+@\S+\.\S+$/.test(em)||pw.length<6)return er.textContent='Enter a valid email and a password of at least 6 characters.';
  if(!window.LVAuth)return er.textContent='Login only works on the deployed Netlify site.';
- try{if(kind==='login'){await LVAuth.login(em,pw);await loadMe();toast('Logged in')}else{await LVAuth.signup(em,pw,{full_name:$('uName').value.trim()});er.textContent='Account created. Check your email to confirm it, then log in.'}}catch(x){er.textContent=x.message||'Something went wrong.'}}
+ try{if(kind==='login'){await LVAuth.login(em,pw);await loadMe();toast('Logged in')}else{await LVAuth.signup(em,pw,{full_name:$('uName').value.trim()});await loadMe();er.textContent=me?'':'Account created. Check your email to confirm it, then log in.'}}catch(x){console.error(x);er.textContent=(x&&x.name&&x.name!=='Error'?x.name+': ':'')+((x&&x.message)||'No details. Press F12, open Console, and read the red error.')}}
 $('authForm').addEventListener('submit',e=>{e.preventDefault();authDo('login')});
 $('uSign').onclick=()=>authDo('signup');
 $('logoutBtn').onclick=async()=>{try{await LVAuth.logout()}catch(e){}me=null;isAdmin=false;mine=[];syncAuth();location.hash='#top'};
