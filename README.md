@@ -32,3 +32,11 @@ Admins log in with the same form and get an **Admin** page to manage every packa
 - Admin page: Verify / Feature buttons, reports from travellers, overview counts, approval switch (turns approval on/off for new packages), JSON backup download.
 - Owners see views and WhatsApp/call/email tap counts on each of their packages.
 - Not built yet: enquiry form, reviews, other languages, map, per-package search pages, analytics. Photos are not included in the JSON backup.
+
+## v3 (SEO) – what changed
+- Real pages for SEO: `/packages/<name>-<id>`, `/islands/<island>`, `/guide`, and an automatic `/sitemap.xml` (built from live packages). Handled by `netlify/functions/pages.mjs`.
+- Package titles on the home page and package pop-ups link to the real package page; Share copies that link.
+- `404.html` forwards confirmation/recovery links (which carry a token after `#`) to the home page so they still work.
+- The Admin page shows a red warning if email confirmation (autoconfirm) is OFF in Netlify Identity. Turn it ON.
+- Login errors now say when a request was blocked (common on work or school networks).
+- Do not keep a static `public/sitemap.xml`; the function creates it.

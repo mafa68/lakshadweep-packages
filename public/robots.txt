@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /api/photos/
+Disallow: /api/
 
 Sitemap: https://lakshadweeppackage.in/sitemap.xml

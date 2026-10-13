@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lakshadweep Packages – Compare Island Trips, Itineraries & Prices</title>
 <meta name="description" content="Compare Lakshadweep tour packages from local operators: Agatti, Bangaram, Kadmat, Kavaratti, Minicoy and Kalpeni. See itineraries, prices, flight or ship options and contact operators directly.">
-<link rel="canonical" href="https://lakshadweeppackage.in/"><meta property="og:url" content="https://lakshadweeppackage.in/"><meta property="og:site_name" content="Lakshadweep Packages"><meta property="og:type" content="website"><meta property="og:title" content="Lakshadweep Packages – Compare Island Trips"><meta property="og:description" content="Day-by-day itineraries, prices and direct contact with local Lakshadweep operators."><meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://lakshadweeppackage.in/"><meta property="og:url" content="https://lakshadweeppackage.in/"><meta property="og:site_name" content="Lakshadweep Packages"><meta property="og:type" content="website"><meta property="og:title" content="Lakshadweep Packages – Compare Island Trips"><meta property="og:description" content="Day-by-day itineraries, prices and direct contact with local Lakshadweep operators."><meta property="og:image" content="https://lakshadweeppackage.in/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://lakshadweeppackage.in/og.png"><meta name="theme-color" content="#0fb5a5">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","url":"https://lakshadweeppackage.in/","name":"Lakshadweep Packages","description":"Compare Lakshadweep tour packages from local operators."}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -182,6 +182,7 @@ dialog{max-width:660px;max-height:90vh;overflow:auto}
 </main>
 <main id="vAdmin" hidden><div class="ophead"><div class="wrap"><h1>Admin dashboard</h1><p>Edit, hide or delete any package, and manage owner accounts.</p></div></div>
 <section class="sec"><div class="wrap"><div id="adminMsg" class="empty">Log in with an admin account to see this page.</div><div id="adminBody" hidden>
+<div id="admWarn" class="empty" hidden style="border-color:var(--coral);color:var(--coral);margin-bottom:16px"></div>
 <div class="info" id="admStats" style="margin-bottom:16px"></div>
 <div class="row"><label><input type="checkbox" id="admApproval"> Require admin approval for new packages</label><button class="btn alt" id="admBackup">Download backup (JSON)</button></div>
 <h2 style="font-size:24px;margin:24px 0 12px">Reports (<span id="repN">0</span>)</h2><div id="admRep" style="margin-bottom:28px"></div>
@@ -194,10 +195,11 @@ dialog{max-width:660px;max-height:90vh;overflow:auto}
 <div><h3>Getting there</h3>Fly to Agatti from Kochi, or sail from Kochi by ship. Check current schedules with your operator.</div>
 <div><h3>Best season</h3>October to May has calm seas and clear water. Monsoon months bring rough weather and reduced services.</div>
 <div><h3>Local rules</h3>Alcohol is not available on most islands. Dress modestly in villages and protect the coral.</div>
+<div><h3>Guides</h3><a href="/guide">Lakshadweep travel guide</a><br><a href="/islands/agatti">Agatti</a> · <a href="/islands/bangaram">Bangaram</a> · <a href="/islands/kadmat">Kadmat</a> · <a href="/islands/kavaratti">Kavaratti</a> · <a href="/islands/minicoy">Minicoy</a> · <a href="/islands/kalpeni">Kalpeni</a></div>
 </div></div></section>
 </main>
 
-<footer><div class="wrap">© 2026 Lakshadweep Packages · Packages are listed by independent operators. Confirm prices and permit rules before booking.<br><button class="lg" onclick="legal.showModal()">Terms &amp; Privacy</button></div></footer>
+<footer><div class="wrap">© 2026 Lakshadweep Packages · Packages are listed by independent operators. Confirm prices and permit rules before booking.<br><button class="lg" onclick="legal.showModal()">Terms &amp; Privacy</button><a class="lg" href="/guide">Travel guide</a></div></footer>
 
 <dialog id="legal"><div class="dlg"><h3>Terms &amp; Privacy</h3>
 <p><b>Terms.</b> Lakshadweep Packages only helps travellers find and contact independent tour operators. Bookings, prices, payments, permits and travel arrangements are agreed directly between you and the operator. We do not guarantee any listing and are not responsible for operator services. Operators must give accurate information. Listings that are misleading or inappropriate may be hidden or removed.</p>
@@ -245,12 +247,14 @@ const $=id=>document.getElementById(id);
 const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2400)}
+const slug=p=>String(p.title).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)+'-'+String(p.id).slice(0,8);
+const pkgUrl=p=>'/packages/'+slug(p);
 function card(p,score){
  const fav=favs.includes(p.id),bg=p.pc?`linear-gradient(#0002,#0008),url(/api/photos/${p.id}/0) center/cover`:grad(p.isl);
  const bd=p.featured?'<span class="badge">⭐ Featured</span>':p.user?'<span class="badge">New</span>':p.rating>=4.7?'<span class="badge">Top rated</span>':'';
  return `<article class="pk"><div class="pic" style="background:${bg}">${esc(p.isl)}${bd}
  <button class="fav" data-fav="${p.id}" aria-label="${fav?'Remove from saved':'Save package'}">${fav?'♥':'♡'}</button></div>
- <div class="pb"><h3>${esc(p.title)} ${p.verified?'<span class="vb">✔ Verified</span>':''}</h3><div class="meta">${esc(p.op)} · ${p.days} days · ★ ${p.rating||'New'}</div><div class="tags"><span class="tr ${p.tr||'none'}">${TRL[p.tr||'none']}</span></div>
+ <div class="pb"><h3>${p.user?`<a href="${pkgUrl(p)}" style="text-decoration:none">${esc(p.title)}</a>`:esc(p.title)} ${p.verified?'<span class="vb">✔ Verified</span>':''}</h3><div class="meta">${esc(p.op)} · ${p.days} days · ★ ${p.rating||'New'}</div><div class="tags"><span class="tr ${p.tr||'none'}">${TRL[p.tr||'none']}</span></div>
  <div class="tags">${p.acts.map(a=>`<span>${esc(a)}</span>`).join('')}</div>
  ${score!=null?`<div class="match">${score}% match</div>`:''}
  <div class="foot"><div class="price">${inr(p.price)}<br><small>per person</small></div><button class="btn" data-open="${p.id}">View & contact</button></div>
@@ -288,7 +292,7 @@ function open(id){
  <div class="tags">${p.acts.map(a=>`<span>${esc(a)}</span>`).join('')}</div>
  <div class="frow"><a class="btn" target="_blank" rel="noopener" onclick="track('${p.id}','wa')" href="https://wa.me/${ph}?text=${msg}">WhatsApp</a>
  <a class="btn alt" onclick="track('${p.id}','call')" href="tel:+${ph}">Call</a><a class="btn alt" onclick="track('${p.id}','mail')" href="mailto:${esc(p.mail)}?subject=${encodeURIComponent(p.title)}">Email</a>
- <button class="btn alt" onclick="shareLink('${p.id}')">Share</button>${p.user?`<button class="btn alt" onclick="reportPkg('${p.id}')">Report</button>`:''}<button class="btn alt" onclick="dlg.close()">Close</button></div>`;
+ <button class="btn alt" onclick="shareLink('${p.id}')">Share</button>${p.user?`<a class="btn alt" href="${pkgUrl(p)}">Full page</a>`:''}${p.user?`<button class="btn alt" onclick="reportPkg('${p.id}')">Report</button>`:''}<button class="btn alt" onclick="dlg.close()">Close</button></div>`;
  $('dlg').showModal();
 }
 document.addEventListener('click',e=>{
@@ -316,7 +320,7 @@ const MON='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),addMonths
 chips($('islTabs'),names,false,showIsl,'Agatti');
 function showIsl(n){const d=ISL[n];$('islCard').innerHTML=`<div style="border-radius:18px;min-height:170px;background:${grad(n)};display:flex;align-items:flex-end;padding:18px;color:#fff;font:700 28px Unbounded">${n}</div>
  <div><h3>${n}</h3><p style="margin:0;color:var(--mute)">${d.b}</p><ul class="facts">${d.f.map(x=>`<li>${x}</li>`).join('')}</ul>
- <p><button class="btn" id="seeIsl">See ${n} packages</button></p></div>`;
+ <p><button class="btn" id="seeIsl">See ${n} packages</button> <a class="btn alt" href="/islands/${n.toLowerCase()}">${n} island guide</a></p></div>`;
  $('seeIsl').onclick=()=>{$('fIsland').value=n;render();$('packages').scrollIntoView()}}
 showIsl('Agatti');
 ['fIsland','fBudget','fSort','fTravel','fMonth'].forEach(i=>$(i).addEventListener('input',render));
@@ -336,6 +340,7 @@ async function loadMine(){try{mine=(await api('/packages?mine=1')).map(p=>({...p
 async function loadMe(){try{const r=await api('/me');me=r.user;isAdmin=r.admin}catch(e){me=null;isAdmin=false}syncAuth()}
 function syncAuth(){const on=!!me;$('authSec').hidden=on;$('list').hidden=!on;$('logoutBtn').hidden=!on;$('adminLink').hidden=!isAdmin;$('acct').textContent=on?'My packages':'For package owners';$('who').textContent=on?'Signed in as '+me.email+(isAdmin?' (admin)':''):'';if(on){loadMine();if(!$('aMail').value)$('aMail').value=me.email}if(location.hash==='#admin')loadAdmin()}
 async function loadAdmin(){$('adminMsg').hidden=isAdmin;$('adminBody').hidden=!isAdmin;if(!isAdmin)return;
+ fetch('/.netlify/identity/settings').then(r=>r.json()).then(j=>{const w=$('admWarn');w.hidden=!j.autoconfirm;w.textContent='Security warning: email confirmation is OFF in Netlify Identity, so anyone can register with any email, including an admin email. Turn it on in Netlify: Project configuration, then Identity.'}).catch(()=>{});
  try{const [pk,us,rp,st]=await Promise.all([api('/packages?all=1'),api('/users'),api('/reports'),api('/settings')]);admList=pk.map(p=>({...p,user:1}));$('admN').textContent=pk.length;$('repN').textContent=rp.length;$('admApproval').checked=st.approval;
  $('admStats').innerHTML=[['Packages',pk.length],['Live',pk.filter(p=>p.status==='live').length],['Owners',us.length],['Open reports',rp.length]].map(([k,v])=>`<div><h3>${k}</h3><b style="font:700 28px Unbounded">${v}</b></div>`).join('')+`<div style="grid-column:1/-1"><h3>Packages by island</h3>${names.map(n=>n+': '+pk.filter(p=>p.isl===n).length).join(' · ')}</div>`;
  $('admRep').innerHTML=rp.length?rp.map(r=>`<div class="row"><span><b>${esc(r.title)}</b> – ${esc(r.reason||'No reason given')}</span><span><button class="btn alt" data-act="viewpk" data-id="${r.pkg}">Open</button> <button class="btn alt" data-act="dismiss" data-id="${r.id}">Dismiss</button></span></div>`).join(''):'<div class="meta">No reports.</div>';
@@ -368,7 +373,7 @@ $('addForm').addEventListener('submit',async e=>{e.preventDefault();const er=$('
 async function authDo(kind){const er=$('uErr'),em=$('uEmail').value.trim(),pw=$('uPass').value;er.textContent='';
  if(!/^\S+@\S+\.\S+$/.test(em)||pw.length<6)return er.textContent='Enter a valid email and a password of at least 6 characters.';
  if(!window.LVAuth)return er.textContent='Login only works on the deployed Netlify site.';
- try{if(kind==='login'){await LVAuth.login(em,pw);await loadMe();toast('Logged in')}else{await LVAuth.signup(em,pw,{full_name:$('uName').value.trim()});await loadMe();er.textContent=me?'':'Account created. Check your email to confirm it, then log in.'}}catch(x){console.error(x);er.textContent=(x&&x.name&&x.name!=='Error'?x.name+': ':'')+((x&&x.message)||'No details. Press F12, open Console, and read the red error.')}}
+ try{if(kind==='login'){await LVAuth.login(em,pw);await loadMe();toast('Logged in')}else{await LVAuth.signup(em,pw,{full_name:$('uName').value.trim()});await loadMe();er.textContent=me?'':'Account created. Check your email to confirm it, then log in.'}}catch(x){console.error(x);er.textContent=(x&&x.message)||'The request was blocked or failed. Error 403 is common on work or school networks. Try mobile data or another network.'}}
 $('authForm').addEventListener('submit',e=>{e.preventDefault();authDo('login')});
 $('uSign').onclick=()=>authDo('signup');
 $('logoutBtn').onclick=async()=>{try{await LVAuth.logout()}catch(e){}me=null;isAdmin=false;mine=[];syncAuth();location.hash='#top'};
@@ -377,7 +382,7 @@ addEventListener('mousemove',e=>{$('orb').style.transform=`translate(${(e.client
 render();renderMatch();
 $('addDay').onclick=()=>addDay();addDay();
 const track=(id,type)=>{if(live.some(p=>p.id===id))fetch('/api/track',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id,type}),keepalive:true}).catch(()=>{})};
-function shareLink(id){const u=location.origin+location.pathname+'#p='+id;if(navigator.share)navigator.share({title:'Lakshadweep package',url:u}).catch(()=>{});else navigator.clipboard.writeText(u).then(()=>toast('Link copied'),()=>toast(u))}
+function shareLink(id){const q=live.find(x=>x.id===id),u=location.origin+(q?pkgUrl(q):location.pathname);if(navigator.share)navigator.share({title:'Lakshadweep package',url:u}).catch(()=>{});else navigator.clipboard.writeText(u).then(()=>toast('Link copied'),()=>toast(u))}
 function reportPkg(id){const r=prompt('Why are you reporting this listing?');if(r)api('/report',{method:'POST',body:JSON.stringify({id,reason:r})}).then(()=>toast('Thanks, we will review it')).catch(x=>toast(x.message))}
 function syncMonths(){$('aMonths').querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',addMonths.has(c.dataset.v)))}
 function shrink(f){return new Promise(res=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.75))};im.onerror=()=>res(null);im.src=u})}
